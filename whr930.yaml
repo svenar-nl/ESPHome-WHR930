@@ -1,0 +1,295 @@
+substitutions:
+  node_name: whr930
+  device_name: WHR930
+  entity_prefix: ''
+
+esphome:
+  name: ${node_name}
+  comment: ${device_name}
+  friendly_name: "${device_name}"
+  includes:
+    - "core/"
+    - "esphome_comfoair.h"
+
+esp32:
+  board: esp32dev
+  # framework:
+  #   type: arduino
+
+wifi:
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${node_name}-setup
+    password: ${node_name}setup
+
+captive_portal:
+
+web_server:
+  port: 80
+
+# Disable uart logging
+logger:
+  baud_rate: 0
+
+# Enable Home Assistant API
+api:
+
+ota:
+  
+sensor:
+- platform: uptime
+  name: "${entity_prefix} Uptime"
+    
+binary_sensor:
+
+text_sensor:
+- platform: version
+  name: "ESPHome Version"
+  hide_timestamp: true
+
+uart:
+  id: uart_bus
+  baud_rate: 9600
+  tx_pin: 17
+  rx_pin: 16 
+
+climate:
+- platform: custom
+  climates:
+    - name: "climate"
+  lambda: |-
+    auto ca = new esphome::comfoair::ComfoAirComponent(id(uart_bus));
+    App.register_component(ca);
+
+    ca->comfort_temperature = new Sensor();
+    ca->comfort_temperature->set_object_id("Comfort Temperature");
+    ca->comfort_temperature->set_name("${entity_prefix} Comfort Temperature");
+    ca->comfort_temperature->set_unit_of_measurement("°C");
+    ca->comfort_temperature->set_accuracy_decimals(1);
+    App.register_sensor(ca->comfort_temperature);
+
+    ca->fan_supply_air_percentage = new Sensor();
+    ca->fan_supply_air_percentage->set_object_id("Fan Supply Percentage");
+    ca->fan_supply_air_percentage->set_name("${entity_prefix} Fan Supply Percentage");
+    ca->fan_supply_air_percentage->set_unit_of_measurement("%");
+    App.register_sensor(ca->fan_supply_air_percentage);
+
+    ca->fan_exhaust_air_percentage = new Sensor();
+    ca->fan_exhaust_air_percentage->set_object_id("Fan Exhaust Percentage");
+    ca->fan_exhaust_air_percentage->set_name("${entity_prefix} Fan Exhaust Percentage");
+    ca->fan_exhaust_air_percentage->set_unit_of_measurement("%");
+    App.register_sensor(ca->fan_exhaust_air_percentage);
+
+    ca->fan_supply_speed = new Sensor();
+    ca->fan_supply_speed->set_object_id("Supply Speed");
+    ca->fan_supply_speed->set_name("${entity_prefix} Supply Speed");
+    ca->fan_supply_speed->set_unit_of_measurement("RPM");
+    App.register_sensor(ca->fan_supply_speed);
+
+    ca->fan_exhaust_speed = new Sensor();
+    ca->fan_exhaust_speed->set_object_id("Exhaust Speed");
+    ca->fan_exhaust_speed->set_name("${entity_prefix} Exhaust Speed");
+    ca->fan_exhaust_speed->set_unit_of_measurement("RPM");
+    App.register_sensor(ca->fan_exhaust_speed);
+
+    ca->supply_air_level = new Sensor();
+    ca->supply_air_level->set_object_id("Supply Airflow");
+    ca->supply_air_level->set_name("${entity_prefix} Supply Airflow");
+    ca->supply_air_level->set_unit_of_measurement("%");
+    App.register_sensor(ca->supply_air_level);
+
+    ca->return_air_level = new Sensor();
+    ca->return_air_level->set_object_id("Return Airflow");
+    ca->return_air_level->set_name("${entity_prefix} Return Airflow");
+    ca->return_air_level->set_unit_of_measurement("%");
+    App.register_sensor(ca->return_air_level);
+
+    ca->ventilation_level = new Sensor();
+    ca->ventilation_level->set_object_id("Ventilation Level");
+    ca->ventilation_level->set_name("${entity_prefix} Ventilation Level");
+    App.register_sensor(ca->ventilation_level);
+
+    ca->outside_air_temperature = new Sensor();
+    ca->outside_air_temperature->set_object_id("Outside Temperature");
+    ca->outside_air_temperature->set_name("${entity_prefix} Outside Temperature");
+    ca->outside_air_temperature->set_unit_of_measurement("°C");
+    ca->outside_air_temperature->set_accuracy_decimals(1);
+    App.register_sensor(ca->outside_air_temperature);
+
+    ca->supply_air_temperature = new Sensor();
+    ca->supply_air_temperature->set_object_id("Supply Temperature");
+    ca->supply_air_temperature->set_name("${entity_prefix} Supply Temperature");
+    ca->supply_air_temperature->set_unit_of_measurement("°C");
+    ca->supply_air_temperature->set_accuracy_decimals(1);
+    App.register_sensor(ca->supply_air_temperature);
+
+    ca->return_air_temperature = new Sensor();
+    ca->return_air_temperature->set_object_id("Return Temperature");
+    ca->return_air_temperature->set_name("${entity_prefix} Return Temperature");
+    ca->return_air_temperature->set_unit_of_measurement("°C");
+    ca->return_air_temperature->set_accuracy_decimals(1);
+    App.register_sensor(ca->return_air_temperature);
+
+    ca->exhaust_air_temperature = new Sensor();
+    ca->exhaust_air_temperature->set_object_id("Exhaust Temperature");
+    ca->exhaust_air_temperature->set_name("${entity_prefix} Exhaust Temperature");
+    ca->exhaust_air_temperature->set_unit_of_measurement("°C");
+    ca->exhaust_air_temperature->set_accuracy_decimals(1);
+    App.register_sensor(ca->exhaust_air_temperature);
+
+    ca->ewt_temperature = new Sensor();
+    ca->ewt_temperature->set_object_id("EWT Temperature");
+    ca->ewt_temperature->set_name("${entity_prefix} EWT Temperature");
+    ca->ewt_temperature->set_unit_of_measurement("°C");
+    ca->ewt_temperature->set_accuracy_decimals(1);
+    App.register_sensor(ca->ewt_temperature);
+
+    ca->reheating_temperature = new Sensor();
+    ca->reheating_temperature->set_object_id("Reheating Temperature");
+    ca->reheating_temperature->set_name("${entity_prefix} Reheating Temperature");
+    ca->reheating_temperature->set_unit_of_measurement("°C");
+    ca->reheating_temperature->set_accuracy_decimals(1);
+    App.register_sensor(ca->reheating_temperature);
+
+    ca->kitchen_hood_temperature = new Sensor();
+    ca->kitchen_hood_temperature->set_object_id("Kitchen Hood Temperature");
+    ca->kitchen_hood_temperature->set_name("${entity_prefix} Kitchen Hood Temperature");
+    ca->kitchen_hood_temperature->set_unit_of_measurement("°C");
+    ca->kitchen_hood_temperature->set_accuracy_decimals(1);
+    App.register_sensor(ca->kitchen_hood_temperature);
+
+    ca->enthalpy_temperature = new Sensor();
+    ca->enthalpy_temperature->set_object_id("Enthalpy Temperature");
+    ca->enthalpy_temperature->set_name("${entity_prefix} Enthalpy Temperature");
+    ca->enthalpy_temperature->set_unit_of_measurement("°C");
+    ca->enthalpy_temperature->set_accuracy_decimals(1);
+    App.register_sensor(ca->enthalpy_temperature);
+
+    ca->enthalpy_humidity = new Sensor();
+    ca->enthalpy_humidity->set_object_id("Enthalpy Humidity Percentage");
+    ca->enthalpy_humidity->set_name("${entity_prefix} Enthalpy Humidity Percentage");
+    ca->enthalpy_humidity->set_unit_of_measurement("%");
+    App.register_sensor(ca->enthalpy_humidity);
+
+    ca->bypass_factor = new Sensor();
+    ca->bypass_factor->set_object_id("Bypass Factor");
+    ca->bypass_factor->set_name("${entity_prefix} Bypass Factor");
+    App.register_sensor(ca->bypass_factor);
+
+    ca->bypass_step = new Sensor();
+    ca->bypass_step->set_object_id("Bypass Step");
+    ca->bypass_step->set_name("${entity_prefix} Bypass Step");
+    App.register_sensor(ca->bypass_step);
+
+    ca->bypass_correction = new Sensor();
+    ca->bypass_correction->set_object_id("Bypass Correction");
+    ca->bypass_correction->set_name("${entity_prefix} Bypass Correction");
+    App.register_sensor(ca->bypass_correction);
+
+    ca->is_bypass_valve_open = new BinarySensor();
+    ca->is_bypass_valve_open->set_object_id("Bypass open");
+    ca->is_bypass_valve_open->set_name("${entity_prefix} Bypass open");
+    App.register_binary_sensor(ca->is_bypass_valve_open);
+
+    ca->is_preheating = new BinarySensor();
+    ca->is_preheating->set_object_id("is preheating");
+    ca->is_preheating->set_name("${entity_prefix} is preheating");
+    App.register_binary_sensor(ca->is_preheating);
+
+    ca->is_summer_mode = new BinarySensor();
+    ca->is_summer_mode->set_object_id("is summer mode");
+    ca->is_summer_mode->set_name("${entity_prefix} is summer mode");
+    App.register_binary_sensor(ca->is_summer_mode);
+
+    ca->is_supply_fan_active = new BinarySensor();
+    ca->is_supply_fan_active->set_object_id("is supply fan active");
+    ca->is_supply_fan_active->set_name("${entity_prefix} is supply fan active");
+    App.register_binary_sensor(ca->is_supply_fan_active);
+
+    ca->is_filter_full = new BinarySensor();
+    ca->is_filter_full->set_object_id("is filter full");
+    ca->is_filter_full->set_name("${entity_prefix} is filter full");
+    App.register_binary_sensor(ca->is_filter_full);
+
+    ca->is_t1_outside_air_present = new BinarySensor();
+    ca->is_t1_outside_air_present->set_object_id("T1 / Outside Air present");
+    ca->is_t1_outside_air_present->set_name("${entity_prefix} T1 / Outside Air present");
+    App.register_binary_sensor(ca->is_t1_outside_air_present);
+
+    ca->is_t2_supply_air_present = new BinarySensor();
+    ca->is_t2_supply_air_present->set_object_id("is T2 / Supply Air present");
+    ca->is_t2_supply_air_present->set_name("${entity_prefix} is T2 / Supply Air present");
+    App.register_binary_sensor(ca->is_t2_supply_air_present);
+
+    ca->is_t3_exhaust_air_in_present = new BinarySensor();
+    ca->is_t3_exhaust_air_in_present->set_object_id("is T3 / Exhaust Air present");
+    ca->is_t3_exhaust_air_in_present->set_name("${entity_prefix} is T3 / Exhaust Air present");
+    App.register_binary_sensor(ca->is_t3_exhaust_air_in_present);
+
+    ca->is_t4_exhaust_air_out_present = new BinarySensor();
+    ca->is_t4_exhaust_air_out_present->set_object_id("is T4 / Exhaust Air present");
+    ca->is_t4_exhaust_air_out_present->set_name("${entity_prefix} is T4 / Exhaust Air present");
+    App.register_binary_sensor(ca->is_t4_exhaust_air_out_present);
+
+    ca->is_ewt_present = new BinarySensor();
+    ca->is_ewt_present->set_object_id("is EWT present");
+    ca->is_ewt_present->set_name("${entity_prefix} is EWT present");
+    App.register_binary_sensor(ca->is_ewt_present);
+
+    ca->is_post_heating_present = new BinarySensor();
+    ca->is_post_heating_present->set_object_id("is post heating present");
+    ca->is_post_heating_present->set_name("${entity_prefix} is post heating present");
+    App.register_binary_sensor(ca->is_post_heating_present);
+
+    ca->is_kitchen_hood_present = new BinarySensor();
+    ca->is_kitchen_hood_present->set_object_id("is Kitchen Hood present");
+    ca->is_kitchen_hood_present->set_name("${entity_prefix} is Kitchen Hood present");
+    App.register_binary_sensor(ca->is_kitchen_hood_present);
+
+    ca->is_enthalpy_present = new BinarySensor();
+    ca->is_enthalpy_present->set_object_id("is Enthalpy present");
+    ca->is_enthalpy_present->set_name("${entity_prefix} is Enthalpy present");
+    App.register_binary_sensor(ca->is_enthalpy_present);
+
+    ca->is_bypass_present = new BinarySensor();
+    ca->is_bypass_present->set_object_id("is Bypass present");
+    ca->is_bypass_present->set_name("${entity_prefix} is Bypass present");
+    App.register_binary_sensor(ca->is_bypass_present);
+
+    ca->is_preheater_present = new BinarySensor();
+    ca->is_preheater_present->set_object_id("is Preheating present");
+    ca->is_preheater_present->set_name("${entity_prefix} is Preheating present");
+    App.register_binary_sensor(ca->is_preheater_present);
+
+    App.register_climate(ca);
+    return {ca};
+
+
+    
+#     ca->is_bypass_valve_open = new BinarySensor();
+#     ca->is_bypass_valve_open->set_object_id("WHR930 Bypass open");
+#     ca->is_bypass_valve_open->set_name("WHR930 Bypass open");
+#     App.register_binary_sensor(ca->is_bypass_valve_open);
+    
+#     ca->is_preheating = new BinarySensor();
+#     ca->is_preheating->set_object_id("WHR930 Preheating");
+#     ca->is_preheating->set_name("WHR930 Preheating");
+#     App.register_binary_sensor(ca->is_preheating);
+    
+#     ca->is_supply_fan_active = new BinarySensor();
+#     ca->is_supply_fan_active->set_object_id("WHR930 Fan Supply active");
+#     ca->is_supply_fan_active->set_name("WHR930 Fan Supply active");
+#     App.register_binary_sensor(ca->is_supply_fan_active);
+    
+#     ca->is_filter_full = new BinarySensor();
+#     ca->is_filter_full->set_object_id("WHR930 Filter");
+#     ca->is_filter_full->set_name("WHR930 Filter");
+#     App.register_binary_sensor(ca->is_filter_full);
+    
+#     ca->is_summer_mode = new BinarySensor();
+#     ca->is_summer_mode->set_object_id("WHR930 Summer Mode");
+#     ca->is_summer_mode->set_name("WHR930 Summer Mode");
+#     App.register_binary_sensor(ca->is_summer_mode);
+    
+#     App.register_climate(ca);
+#     return {ca};
